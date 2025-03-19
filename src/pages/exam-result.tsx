@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTheme } from '../lib/theme-context';
-import { Exam } from '../lib/types';
+import { Exam, ExamResult } from '../lib/types';
 import {
   Award,
-  Clock,
-  Target,
   CheckCircle,
   XCircle,
   AlertCircle,
   ArrowLeft,
+  History
 } from 'lucide-react';
 
 export function ExamResultPage() {
@@ -17,6 +16,8 @@ export function ExamResultPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [exam, setExam] = useState<Exam | null>(null);
+  const [currentAttempt, setCurrentAttempt] = useState<number>(1);
+  const [attempts, setAttempts] = useState<ExamResult[]>([]);
   const [results, setResults] = useState<{
     totalQuestions: number;
     correctAnswers: number;
@@ -25,21 +26,76 @@ export function ExamResultPage() {
     percentage: number;
     timeTaken: number;
     isPassed: boolean;
+    attemptNumber: number;
+    correctPercentage: number;
+    wrongPercentage: number;
+    skippedPercentage: number;
   } | null>(null);
 
   useEffect(() => {
-    // Load exam and results from localStorage
+    // Load exam and all attempts from localStorage
     const exams = JSON.parse(localStorage.getItem('exams') || '[]');
     const currentExam = exams.find((e: Exam) => e.id === examId);
     if (currentExam) {
       setExam(currentExam);
     }
 
-    const examResults = JSON.parse(localStorage.getItem(`examResult_${examId}`) || 'null');
-    if (examResults) {
-      setResults(examResults);
+    // Load all attempts for this exam
+    const allResults = JSON.parse(localStorage.getItem(`examResults_${examId}`) || '[]');
+    setAttempts(allResults);
+
+    // Set the latest attempt as current
+    if (allResults.length > 0) {
+      const latestAttempt = Math.max(...allResults.map((r: ExamResult) => r.attemptNumber));
+      setCurrentAttempt(latestAttempt);
+      const currentResults = allResults.find((r: ExamResult) => r.attemptNumber === latestAttempt);
+      if (currentResults) {
+        const totalQuestions = currentResults.sectionWiseMarks.reduce((acc: number, s: { totalQuestions: number }) => acc + s.totalQuestions, 0);
+        const correctAnswers = currentResults.sectionWiseMarks.reduce((acc: number, s: { correctAnswers: number }) => acc + s.correctAnswers, 0);
+        const wrongAnswers = currentResults.sectionWiseMarks.reduce((acc: number, s: { wrongAnswers: number }) => acc + s.wrongAnswers, 0);
+        const skippedAnswers = totalQuestions - (correctAnswers + wrongAnswers);
+
+        setResults({
+          totalQuestions,
+          correctAnswers,
+          wrongAnswers,
+          score: currentResults.obtainedMarks,
+          percentage: (currentResults.obtainedMarks / currentResults.totalMarks) * 100,
+          timeTaken: currentResults.timeTaken,
+          isPassed: currentResults.status === 'pass',
+          attemptNumber: currentResults.attemptNumber,
+          correctPercentage: (correctAnswers / totalQuestions) * 100,
+          wrongPercentage: (wrongAnswers / totalQuestions) * 100,
+          skippedPercentage: (skippedAnswers / totalQuestions) * 100
+        });
+      }
     }
   }, [examId]);
+
+  const handleAttemptChange = (attemptNumber: number) => {
+    const selectedResult = attempts.find(r => r.attemptNumber === attemptNumber);
+    if (selectedResult) {
+      setCurrentAttempt(attemptNumber);
+      const totalQuestions = selectedResult.sectionWiseMarks.reduce((acc, s) => acc + s.totalQuestions, 0);
+      const correctAnswers = selectedResult.sectionWiseMarks.reduce((acc, s) => acc + s.correctAnswers, 0);
+      const wrongAnswers = selectedResult.sectionWiseMarks.reduce((acc, s) => acc + s.wrongAnswers, 0);
+      const skippedAnswers = totalQuestions - (correctAnswers + wrongAnswers);
+
+      setResults({
+        totalQuestions,
+        correctAnswers,
+        wrongAnswers,
+        score: selectedResult.obtainedMarks,
+        percentage: (selectedResult.obtainedMarks / selectedResult.totalMarks) * 100,
+        timeTaken: selectedResult.timeTaken,
+        isPassed: selectedResult.status === 'pass',
+        attemptNumber: selectedResult.attemptNumber,
+        correctPercentage: (correctAnswers / totalQuestions) * 100,
+        wrongPercentage: (wrongAnswers / totalQuestions) * 100,
+        skippedPercentage: (skippedAnswers / totalQuestions) * 100
+      });
+    }
+  };
 
   if (!exam || !results) {
     return (
@@ -48,11 +104,6 @@ export function ExamResultPage() {
       </div>
     );
   }
-
-  // Calculate pie chart segments
-  const correctPercentage = (results.correctAnswers / results.totalQuestions) * 100;
-  const wrongPercentage = (results.wrongAnswers / results.totalQuestions) * 100;
-  const skippedPercentage = 100 - correctPercentage - wrongPercentage;
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
@@ -76,8 +127,26 @@ export function ExamResultPage() {
             {exam.title} - Results
           </h1>
           <div className={`mt-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            {new Date(exam.scheduledDate).toLocaleDateString()}
+            Attempt {currentAttempt} of {attempts.length} - {new Date(exam.scheduledDate).toLocaleDateString()}
           </div>
+
+          {/* Attempt Selector */}
+          {attempts.length > 1 && (
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <History className="h-4 w-4" />
+              <select
+                value={currentAttempt}
+                onChange={(e) => handleAttemptChange(Number(e.target.value))}
+                className={`rounded-md border ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} px-3 py-1 text-sm`}
+              >
+                {attempts.map((attempt) => (
+                  <option key={attempt.attemptNumber} value={attempt.attemptNumber}>
+                    Attempt {attempt.attemptNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {/* Results Summary */}
@@ -138,7 +207,7 @@ export function ExamResultPage() {
                   fill="transparent"
                   stroke="#22c55e"
                   strokeWidth="20"
-                  strokeDasharray={`${correctPercentage} ${100 - correctPercentage}`}
+                  strokeDasharray={`${results.correctPercentage} ${100 - results.correctPercentage}`}
                   transform="rotate(-90 50 50)"
                 />
                 <circle
@@ -148,10 +217,10 @@ export function ExamResultPage() {
                   fill="transparent"
                   stroke="#ef4444"
                   strokeWidth="20"
-                  strokeDasharray={`${wrongPercentage} ${100 - wrongPercentage}`}
-                  transform={`rotate(${(correctPercentage - 90)} 50 50)`}
+                  strokeDasharray={`${results.wrongPercentage} ${100 - results.wrongPercentage}`}
+                  transform={`rotate(${(results.correctPercentage - 90)} 50 50)`}
                 />
-                {skippedPercentage > 0 && (
+                {results.skippedPercentage > 0 && (
                   <circle
                     cx="50"
                     cy="50"
@@ -159,8 +228,8 @@ export function ExamResultPage() {
                     fill="transparent"
                     stroke="#f59e0b"
                     strokeWidth="20"
-                    strokeDasharray={`${skippedPercentage} ${100 - skippedPercentage}`}
-                    transform={`rotate(${(correctPercentage + wrongPercentage - 90)} 50 50)`}
+                    strokeDasharray={`${results.skippedPercentage} ${100 - results.skippedPercentage}`}
+                    transform={`rotate(${(results.correctPercentage + results.wrongPercentage - 90)} 50 50)`}
                   />
                 )}
               </svg>
@@ -226,4 +295,4 @@ export function ExamResultPage() {
       </div>
     </div>
   );
-} 
+}

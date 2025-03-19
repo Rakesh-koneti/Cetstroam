@@ -18,6 +18,8 @@ import { ProtectedRoute } from './components/protected-route';
 import { EditExamPage } from './pages/admin/edit-exam';
 import { ExamsPage } from './pages/exams';
 import { StreamExamsPage } from './pages/exams/stream-exams';
+import { PreviousYearPapersPage } from './pages/previous-year-papers';
+import { PreviousPapersPage } from './pages/previous-papers';
 
 function App() {
   useEffect(() => {
@@ -38,9 +40,9 @@ function App() {
 
   return (
     <Router>
-      <AuthProvider>
-        <ThemeProvider>
-          <LanguageProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
             <Routes>
               <Route element={<Layout />}>
                 {/* Public Routes */}
@@ -48,19 +50,20 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/exams" element={<ExamsPage />} />
+                <Route path="/previous-year-papers" element={<PreviousYearPapersPage />} />
                 <Route path="/exams/:stream" element={<StreamExamsPage />} />
                 <Route path="/exam/:examId" element={<ExamPage />} />
                 <Route path="/exam/:examId/result" element={<ExamResultPage />} />
                 <Route path="/exam/:examId/review" element={<ExamReviewPage />} />
                 <Route path="/admin/login" element={<AdminLoginPage />} />
+                <Route path="/previous-papers" element={<PreviousPapersPage />} />
 
                 {/* Protected Admin Routes */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-                  <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-                  <Route path="/admin/create-exam" element={<CreateExamPage />} />
+                  <Route path="/admin" element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>} />
+                  <Route path="/admin/create-exam" element={<ProtectedRoute><CreateExamPage /></ProtectedRoute>} />
                   <Route path="/admin/edit-exam/:id" element={<EditExamPage />} />
-                  <Route path="/admin/manage-tests" element={<ManageTestsPage />} />
+                  <Route path="/admin/manage-tests" element={<ProtectedRoute><ManageTestsPage /></ProtectedRoute>} />
                   <Route path="/admin/manage-tests/:category" element={<ManageTestsPage />} />
                 </Route>
 
@@ -68,9 +71,9 @@ function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>
-          </LanguageProvider>
-        </ThemeProvider>
-      </AuthProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </Router>
   );
 }

@@ -1,4 +1,4 @@
-# Cetstroam - Online Exam Platform
+# Cetstrom - Online Exam Platform
 
 A modern, responsive web application for conducting online exams and practice tests. Built with React, TypeScript, and Tailwind CSS.
 
@@ -86,5 +86,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Rakesh Koneti - rakeshkoneti123@gmail.com
-Project Link: [https://github.com/Rakesh-koneti/Cetstroam](https://github.com/Rakesh-koneti/Cetstroam) 
+Rakesh Koneti - krakesh.gates@gmail.com
+Location: Tadipatri, Andhra Pradesh, India
+Project Link: [https://github.com/Rakesh-koneti/cetstrom](https://github.com/Rakesh-koneti/cetstrom) 

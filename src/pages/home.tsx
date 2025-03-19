@@ -1,21 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../lib/theme-context';
-import { Button } from '../components/ui/button';
 import {
-  BookOpen,
   Brain,
   Clock,
   GraduationCap,
-  LineChart,
-  Shield,
-  Sparkles,
   Target,
-  Calendar,
   Beaker,
   Users,
 } from 'lucide-react';
-import { LaunchAnnouncement } from '../components/launch-announcement';
 
 export function HomePage() {
   const { theme } = useTheme();
@@ -30,11 +23,6 @@ export function HomePage() {
 
     return () => clearInterval(timer);
   }, []);
-
-  const handleStartPractice = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    window.location.href = '/exams';
-  };
 
   const features = [
     {
@@ -60,142 +48,166 @@ export function HomePage() {
   ];
 
   return (
-    <div className="relative">
-      {/* Current Date/Time Display */}
-      <div className={`fixed top-20 right-4 p-4 rounded-lg shadow-lg backdrop-blur-sm ${
-        isDark ? 'bg-gray-800/80 text-white' : 'bg-white/80 text-gray-900'
-      }`}>
-        <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-violet-600" />
-          <span className="font-medium">
-            {currentDateTime.toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 mt-2">
-          <Clock className="h-5 w-5 text-violet-600" />
-          <span className="font-medium">
-            {currentDateTime.toLocaleTimeString('en-US')}
-          </span>
-        </div>
-      </div>
-
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative isolate overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
-          <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-            {/* Launch Announcement */}
-            <div className={`mb-8 p-4 rounded-lg ${
-              isDark 
-                ? 'bg-violet-900/90 ring-2 ring-violet-500' 
-                : 'bg-violet-600'
-            }`}>
-              <div className="flex items-center gap-3">
-                <Calendar className="h-6 w-6 text-white animate-pulse" />
-                <p className="font-bold text-white text-lg">
-                  Platform Launch: March 15, 2025
-                </p>
+      <section className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <div className="inline-block bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full text-lg font-medium animate-bounce">
+              👋 Welcome to CETStrom - Your Success Partner!
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div className="space-y-8">
+              <div className="inline-block bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
+                🎯 Best Platform for Entrance Exam Preparation
               </div>
-              <div className="mt-2 flex items-center gap-2 text-violet-100">
-                <Clock className="h-5 w-5" />
-                <span className="font-medium">Get ready for an enhanced learning experience!</span>
+              <h1 className="text-5xl md:text-6xl font-bold animate-fade-in">
+                Master Your
+                <span className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-orange-400">
+                  Entrance Exams
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-200 animate-fade-in-delay">
+                Comprehensive practice tests and expert guidance for Engineering & Pharmacy entrance exams
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  to="/exams"
+                  className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg"
+                >
+                  Start Free Practice
+                </Link>
+                <Link
+                  to="/about"
+                  className="inline-block bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full font-semibold hover:bg-white/20 transition-all"
+                >
+                  Learn More
+                </Link>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/10">
+                <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl font-bold text-yellow-300 animate-count-up">1000+</div>
+                  <div className="text-sm text-gray-300">Practice Questions</div>
+                </div>
+                <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl font-bold text-yellow-300 animate-count-up">1000+</div>
+                  <div className="text-sm text-gray-300">Active Students</div>
+                </div>
+                <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl font-bold text-yellow-300 animate-count-up">95%</div>
+                  <div className="text-sm text-gray-300">Success Rate</div>
+                </div>
               </div>
             </div>
 
-            <div className="mt-24 sm:mt-32 lg:mt-16">
-              <a href="/exams" className="inline-flex space-x-6">
-                <span className={`rounded-full px-3 py-1 text-sm font-semibold leading-6 ${
-                  isDark 
-                    ? 'bg-violet-500/10 text-violet-400 ring-1 ring-violet-500/20' 
-                    : 'bg-violet-600/10 text-violet-600 ring-1 ring-violet-600/20'
-                }`}>
-                  Coming Soon
-                </span>
-                <span className={`inline-flex items-center space-x-2 text-sm font-medium leading-6 ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  <span>Launch date: March 15, 2025</span>
-                </span>
-              </a>
-            </div>
-            <h1 className={`mt-10 text-4xl font-bold tracking-tight sm:text-6xl ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
-              Prepare for your future with our practice tests
-            </h1>
-            <p className={`mt-6 text-lg leading-8 ${
-              isDark ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              Get ready for your entrance exams with our comprehensive practice tests. 
-              Choose from engineering or pharmacy streams and start your preparation journey.
-            </p>
-            <div className="mt-10 flex items-center gap-x-6">
-              <a
-                href="/exams"
-                className={`rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                  isDark 
-                    ? 'bg-violet-500 hover:bg-violet-400 focus-visible:outline-violet-500' 
-                    : 'bg-violet-600 hover:bg-violet-500 focus-visible:outline-violet-600'
-                }`}
-              >
-                Browse Tests
-              </a>
-              <a href="/about" className={`text-sm font-semibold leading-6 ${
-                isDark ? 'text-gray-300' : 'text-gray-900'
-              }`}>
-                Learn more <span aria-hidden="true">→</span>
-              </a>
+            {/* Right Image Container */}
+            <div className="relative group" onClick={() => {
+              const imageContainer = document.querySelector('.image-container');
+              imageContainer?.classList.remove('animate-click');
+              setTimeout(() => imageContainer?.classList.add('animate-click'), 10);
+            }}>
+              <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl transform group-hover:scale-102 transition-transform duration-500 image-container animate-on-click">
+                <style>{`
+                  .animate-click {
+                    animation: clickEffect 0.5s ease-out;
+                  }
+                  @keyframes clickEffect {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(0.95) rotate(-2deg); }
+                    100% { transform: scale(1) rotate(0deg); }
+                  }
+                `}</style>
+                <img
+                  src="/images/entrance-exam.jpg"
+                  alt="Entrance Exam Preparation"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80';
+                  }}
+                />
+                {/* Enhanced Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-700/40 via-purple-700/30 to-transparent"></div>
+              </div>
+              
+              {/* Floating Features */}
+              <div className="absolute -right-4 top-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer animate-float">
+                <div className="flex items-center gap-2">
+                  <Target className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm font-medium text-gray-800 dark:text-white">Targeted Practice</span>
+                </div>
+              </div>
+              
+              <div className="absolute -left-4 bottom-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer animate-float-delayed">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm font-medium text-gray-800 dark:text-white">Time Management</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Features Section */}
-      <div className="mx-auto mt-8 max-w-7xl px-6 sm:mt-16 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className={`text-base font-semibold leading-7 ${
-            isDark ? 'text-violet-400' : 'text-violet-600'
-          }`}>Everything you need</h2>
-          <p className={`mt-2 text-3xl font-bold tracking-tight sm:text-4xl ${
-            isDark ? 'text-white' : 'text-gray-900'
-          }`}>
-            Comprehensive Test Platform
-          </p>
-          <p className={`mt-6 text-lg leading-8 ${
-            isDark ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Our platform offers a wide range of features to help you prepare effectively for your entrance exams.
-          </p>
-        </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-purple-500/20 -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-pink-500/20 translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+      </section>
+
+      {/* Key Features Section */}
+      <section className={`py-20 ${isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} transition-colors duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold">
+              <span className={`bg-clip-text text-transparent bg-gradient-to-r ${isDark ? 'from-purple-400 to-pink-400' : 'from-indigo-600 to-purple-600'}`}>
+                Why Choose Us?
+              </span>
+            </h2>
+            <p className={`mt-4 text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+              Everything you need to succeed in your entrance exams
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature) => (
-              <div key={feature.name} className={`flex flex-col ${
-                isDark ? 'hover:bg-gray-800/50' : 'hover:bg-gray-50'
-              } rounded-lg p-4 transition-colors`}>
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7">
-                  <feature.icon className={`h-5 w-5 flex-none ${
-                    isDark ? 'text-violet-400' : 'text-violet-600'
-                  }`} />
-                  <span className={isDark ? 'text-white' : 'text-gray-900'}>{feature.name}</span>
-                </dt>
-                <dd className={`mt-4 flex flex-auto flex-col text-base leading-7 ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  <p className="flex-auto">{feature.description}</p>
-                </dd>
+              <div
+                key={feature.name}
+                className="group bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 hover:bg-gradient-to-b hover:from-purple-50 hover:to-white dark:hover:from-gray-800 dark:hover:to-gray-900 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                <div className="text-purple-600 mb-6 group-hover:scale-110 transition-transform">
+                  <feature.icon className="h-12 w-12" />
+                </div>
+                <h3 className="text-2xl font-semibold mb-4">{feature.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {feature.description}
+                </p>
               </div>
             ))}
-          </dl>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Launch Announcement */}
-      <LaunchAnnouncement />
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-fade-in">Ready to Excel?</h2>
+          <p className="text-xl mb-8 animate-fade-in-delay">Join thousands of successful students today</p>
+          <div className="mb-8 text-2xl font-bold">
+            <span>Next Exam: {currentDateTime.toLocaleDateString()} {currentDateTime.toLocaleTimeString()}</span>
+          </div>
+          <Link
+            to="/exams"
+            className="inline-block bg-white text-purple-600 px-8 py-4 rounded-full font-semibold hover:bg-opacity-90 transition-all transform hover:scale-105 shadow-lg animate-bounce"
+          >
+            Start Your Journey
+          </Link>
+        </div>
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+      </section>
+
     </div>
   );
 }

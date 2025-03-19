@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Brain, Beaker, Leaf } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Exam, Section, Question, DifficultyLevel, Stream } from '../../lib/types';
+import { Exam, Section, DifficultyLevel, Stream } from '../../lib/types';
 
 const streamInfo = {
   engineering: {
@@ -71,22 +70,15 @@ export function CreateExamPage() {
         ),
       };
 
-      console.log('Creating new exam:', newExam); // Debug log
-
       // Save to localStorage
       const storedExams = localStorage.getItem('exams');
-      console.log('Current stored exams:', storedExams); // Debug log
-
       const exams = storedExams ? JSON.parse(storedExams) : [];
-      console.log('Parsed existing exams:', exams); // Debug log
 
       // Add new exam
       exams.push(newExam);
-      console.log('Updated exams array:', exams); // Debug log
 
       // Save back to localStorage
       localStorage.setItem('exams', JSON.stringify(exams));
-      console.log('Saved to localStorage'); // Debug log
 
       // Show success message
       alert('Exam created successfully!');

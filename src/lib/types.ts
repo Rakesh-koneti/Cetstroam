@@ -59,6 +59,7 @@ export interface ExamSession {
   id: string;
   examId: string;
   userId: string;
+  attemptNumber: number;
   startTime: string;
   endTime?: string;
   status: 'ongoing' | 'completed' | 'abandoned';
@@ -78,6 +79,7 @@ export interface ExamResult {
   sessionId: string;
   examId: string;
   userId: string;
+  attemptNumber: number;
   totalMarks: number;
   obtainedMarks: number;
   sectionWiseMarks: {
@@ -95,4 +97,4 @@ export interface ExamResult {
     weaknesses: string[];
     recommendations: string[];
   };
-} 
+}
